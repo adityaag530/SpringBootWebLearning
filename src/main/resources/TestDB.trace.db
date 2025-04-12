@@ -1,0 +1,9 @@
+2025-04-13 01:08:36.726390+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EMPLOYEES" not found; SQL statement:
+select ee1_0.id,ee1_0.age,ee1_0.date_of_joining,ee1_0.email,ee1_0.is_active,ee1_0.name from employees ee1_0 [42102-232]
+2025-04-13 01:08:40.788798+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EMPLOYEES" not found; SQL statement:
+select ee1_0.id,ee1_0.age,ee1_0.date_of_joining,ee1_0.email,ee1_0.is_active,ee1_0.name from employees ee1_0 [42102-232]
+2025-04-13 01:10:45.893514+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EMPLOYEES" not found; SQL statement:
+select ee1_0.id,ee1_0.age,ee1_0.date_of_joining,ee1_0.email,ee1_0.is_active,ee1_0.name from employees ee1_0 [42102-232]

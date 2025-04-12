@@ -25,4 +25,19 @@ client -> http/json -> controller -> dto -> service -> Entity -> respository -> 
 
 what happen when you start the server:
     -server start - it goes to all the controller and tell dispatcher servelet to where to map the request
-    -
+
+
+Java/Jakarta Persistence API - JPA
+    - db are servers that store data inside secondary memory
+    - every dp provide driver that will help us connect with dp with different languages
+    - JPA will confire the driver and jdbc
+    - what we need:
+        - spring data JPA (spring-started-data-jpa)
+        - database (h2(db-emulater)-in memory db library/mysql/postgresSql)
+        - removing version from pom.xml for h2 dependency as version is already mentioned in spring starter parent pom then spring boot dependencies-->
+        - h2 configuration and url will be automatically configured
+        -
+
+
+flow = JPA(JPQL) -> JPA Provider(specification - Hibernate(ORM - object mapping)) -> API JDBC -> DRIVER -> MySQL
+- JpaRepository implementation simpleJpaRepository has all the implementation

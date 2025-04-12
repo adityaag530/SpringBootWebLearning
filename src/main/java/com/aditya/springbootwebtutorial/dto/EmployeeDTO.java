@@ -10,12 +10,12 @@ import java.time.LocalDate;
 
 public class EmployeeDTO {
 
-    Long id;
-    String name;
-    String email;
-    Integer age;
-    LocalDate dateOfJoining;
-    Boolean isActive;
+    private Long id;
+    private String name;
+    private String email;
+    private Integer age;
+    private LocalDate dateOfJoining;
+    private Boolean isActive;
 
     public EmployeeDTO(){}
 
