@@ -1,0 +1,28 @@
+spring-boot-starter-web contains:
+    - sprint-boot-starter
+    - jackson // convert json to object
+    - spring-core
+    - spring-mvc // mvc architecture
+    - spring-boot-starter-tomcat // embedded server
+
+Spring MVC - why? - separation of concerns/layers : reusability : testability : scalability :
+    - client -> http request(json/xml) -> controller(object) -> service layer
+    -> repository -> model/entity(mapped to database)
+
+Layerd Architecture:
+    - presentation layer - controller/authentication
+    - business layer - service/validation/authorisation
+    - persistence layer - repository/querirs - JPQL/drivers
+    - database - db
+
+
+Project stucture:
+    - controller
+    - service
+    - repository
+
+client -> http/json -> controller -> dto -> service -> Entity -> respository -> db
+
+what happen when you start the server:
+    -server start - it goes to all the controller and tell dispatcher servelet to where to map the request
+    -
