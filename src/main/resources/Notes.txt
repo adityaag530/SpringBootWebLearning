@@ -62,3 +62,9 @@ Custom Annotation Validation:
     - copy three methods from other existing annotations i.e. message(), groups() and payload()
     - create a validator class which implements ConstraintValidator< here name of the annotation class, type of field>
     - override isValid() method and write the logic in it
+
+Exception Handling:
+    - @ExceptionHandler to handle specific exceptions in controllers
+    - @RestControllerAdvice for global exception handling
+    - Return appropriate http status code and erro message
+    - custome error response class to provide structured error details
