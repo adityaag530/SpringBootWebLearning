@@ -41,3 +41,7 @@ Java/Jakarta Persistence API - JPA
 
 flow = JPA(JPQL) -> JPA Provider(specification - Hibernate(ORM - object mapping)) -> API JDBC -> DRIVER -> MySQL
 - JpaRepository implementation simpleJpaRepository has all the implementation
+
+- server layer bridge between controller and repository (business logic)
+- conversion of entity to dto or vice versa should be done inside service
+- model mapper (maven repo) will help in conversion of any class to other class
