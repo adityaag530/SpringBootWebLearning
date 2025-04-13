@@ -48,3 +48,17 @@ flow = JPA(JPQL) -> JPA Provider(specification - Hibernate(ORM - object mapping)
 
 - patch mapping learn about reflection field update
 - ResponseEntity to return meaningful http message
+
+Validation and custom Validation:
+    - add dependency spring boot starter validation
+    - so DTO is the first point of contact so add vaidation in DTO class
+    - add annotation @Valid in controller
+    - add respective validation annotation like @NotNull, @max, @min etc in fields of DTO
+@Valid - validates the associated object recursively (applies bean validation to nested objects)
+
+Custom Annotation Validation:
+    - @interface
+    - @Retention , @Target, @Constraint(validatedBy = {name of the validator class.class})
+    - copy three methods from other existing annotations i.e. message(), groups() and payload()
+    - create a validator class which implements ConstraintValidator< here name of the annotation class, type of field>
+    - override isValid() method and write the logic in it

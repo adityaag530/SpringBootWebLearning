@@ -3,6 +3,7 @@ package com.aditya.springbootwebtutorial.controllers;
 
 import com.aditya.springbootwebtutorial.dto.EmployeeDTO;
 import com.aditya.springbootwebtutorial.services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,7 +68,7 @@ public class EmployeeController {
 
     // to pass complex data we need to use @RequestBody
     @PostMapping
-    public ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody EmployeeDTO inputEmployee){
+    public ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody @Valid EmployeeDTO inputEmployee){
 //        inputEmployee.setId(100L);
 //        return inputEmployee;
         // all request are get by default from browser so to test post use postman
@@ -78,7 +79,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeId}")
-    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody EmployeeDTO employeeDTO,
+    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody @Valid EmployeeDTO employeeDTO,
                                           @PathVariable Long employeeId){
         // change whole data put mapping is used
         // if you provide few employee fields in put mapping then rest field will get updated to null as it will update the whole instance
