@@ -2,12 +2,15 @@ package com.aditya.springbootwebtutorial.controllers;
 
 
 import com.aditya.springbootwebtutorial.dto.EmployeeDTO;
-import com.aditya.springbootwebtutorial.entities.EmployeeEntity;
 import com.aditya.springbootwebtutorial.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /*
  * @author adityagupta
@@ -40,37 +43,61 @@ public class EmployeeController {
     // @ResuestParam - /employees?id=123 - when parameter is optional and used for filtering, sorting or modification to the request
 
     @GetMapping("/{employeeId}")
-    public EmployeeDTO getEmployeeById(@PathVariable(name = "employeeId") Long id ){
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable(name = "employeeId") Long id ){
         // "employeeId" in path should match with the argument or specify in @PathVariable
 //        return new EmployeeDTO(id, "abc", "abc.gmail.com", 24, LocalDate.of(2025, 4, 12), true);
 
         //just for testing i am dealing with entity we should always us dto in controller.
-        return employeeService.getEmployeeById(id);
+//        EmployeeDTO employeeDTO = employeeService.getEmployeeById(id);
+//        if (employeeDTO == null) return ResponseEntity.notFound().build();
+//        return ResponseEntity.ok(employeeDTO);
+
+        Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(id);
+        return employeeDTO.map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1)).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public List<EmployeeDTO> getAllEmployees(@RequestParam(required = false) Integer age,
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees(@RequestParam(required = false) Integer age,
                                              @RequestParam(required = false, name = "sort") String sortBy){
         // to make query fields optional use required
         // "age" name should match with the query param "?age=27" in the url endpoint
 //        return "Hi " + age + sortBy;
-        return employeeService.getAllEmployees();
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
     // to pass complex data we need to use @RequestBody
     @PostMapping
-    public EmployeeDTO createNewEmployee(@RequestBody EmployeeDTO inputEmployee){
+    public ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody EmployeeDTO inputEmployee){
 //        inputEmployee.setId(100L);
 //        return inputEmployee;
         // all request are get by default from browser so to test post use postman
 //        return "Hello new Employee Created";
-
-        return employeeService.createNewEmployee(inputEmployee);
+        EmployeeDTO  employeeDTO = employeeService.createNewEmployee(inputEmployee);
+        // new ResponseEntity when we want to pass a custome http status code
+        return new ResponseEntity<>(employeeDTO, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public String updateEmployee(){
-        return "Hello from put";
+    @PutMapping("/{employeeId}")
+    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody EmployeeDTO employeeDTO,
+                                          @PathVariable Long employeeId){
+        // change whole data put mapping is used
+        // if you provide few employee fields in put mapping then rest field will get updated to null as it will update the whole instance
+        return ResponseEntity.ok(employeeService.updateEmployeeById(employeeId, employeeDTO));
+    }
+
+    @DeleteMapping("/{employeeId}")
+    public ResponseEntity<Boolean> deleteEmployeeById(@PathVariable Long employeeId){
+        boolean gotDeleted = employeeService.deleteEmployeeById(employeeId);
+        if (gotDeleted) return ResponseEntity.ok(true);
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{employeeId}")
+    public ResponseEntity<EmployeeDTO> updatePartialEmployeeById(@RequestBody Map<String, Object> updates,
+                                                 @PathVariable Long employeeId){
+        EmployeeDTO employeeDTO = employeeService.updatePartialEmployeeById(employeeId, updates);
+        if (employeeDTO == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(employeeDTO);
     }
 
 }

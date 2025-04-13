@@ -4,10 +4,15 @@ package com.aditya.springbootwebtutorial.services;
 import com.aditya.springbootwebtutorial.dto.EmployeeDTO;
 import com.aditya.springbootwebtutorial.entities.EmployeeEntity;
 import com.aditya.springbootwebtutorial.repositories.EmployeeRepository;
+import org.apache.el.util.ReflectionUtil;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /*
@@ -31,11 +36,14 @@ public class EmployeeService {
     }
 
 
-    public EmployeeDTO getEmployeeById(Long id) {
-        EmployeeEntity employeeEntity = employeeRepository.findById(id).orElse(null);
+    public Optional<EmployeeDTO> getEmployeeById(Long id) {
+//        EmployeeEntity employeeEntity = employeeRepository.findById(id).orElse(null);
 //        ModelMapper mapper = new ModelMapper();
         // we dont want to initialize model mapper in each method so we will add in configs pacakge
-        return modelMapper.map(employeeEntity, EmployeeDTO.class);
+//        return modelMapper.map(employeeEntity, EmployeeDTO.class);
+//        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(id);
+//        return employeeEntity.map(employeeEntity1 -> modelMapper.map(employeeEntity, EmployeeDTO.class));
+          return employeeRepository.findById(id).map(employeeEntity -> modelMapper.map(employeeEntity, EmployeeDTO.class));
     }
 
     public List<EmployeeDTO> getAllEmployees() {
@@ -51,5 +59,44 @@ public class EmployeeService {
        EmployeeEntity employeeEntity = modelMapper.map(inputEmployee, EmployeeEntity.class);
        EmployeeEntity savedEmployee = employeeRepository.save(employeeEntity);
        return modelMapper.map(savedEmployee, EmployeeDTO.class);
+    }
+
+    public EmployeeDTO updateEmployeeById(Long employeeId, EmployeeDTO employeeDTO) {
+        // what if that particular empId is not present in db
+        // ask product manager for clarity what can be done, should we save it to db as user is sending a new empDTO details
+
+        EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
+        //user might not have provided the employee id in dto
+        employeeEntity.setId(employeeId);
+        // save will work as hashmap if present update, else create a new
+        EmployeeEntity savedEmployee = employeeRepository.save(employeeEntity);
+        return modelMapper.map(savedEmployee, EmployeeDTO.class);
+    }
+
+    public boolean deleteEmployeeById(Long employeeId) {
+        boolean exists = isExistsByEmployeeId(employeeId);
+        if(!exists) return false;
+        employeeRepository.deleteById(employeeId);
+        return true;
+    }
+
+    public EmployeeDTO updatePartialEmployeeById(Long employeeId, Map<String, Object> updates) {
+        boolean exists = isExistsByEmployeeId(employeeId);
+        if(!exists) return null;
+        EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).get();
+
+        // Reflection - directly go object any object and update the fields directly
+        updates.forEach( (field, value) -> {
+            Field fieldToBeUpdated = ReflectionUtils.findRequiredField(EmployeeEntity.class, field);
+            // making field public so that it can be updated
+            fieldToBeUpdated.setAccessible(true);
+            // we are updating the local object of employee entity which is declared at line 82
+            ReflectionUtils.setField(fieldToBeUpdated, employeeEntity, value);
+        });
+        return modelMapper.map(employeeRepository.save(employeeEntity), EmployeeDTO.class);
+    }
+
+    public boolean isExistsByEmployeeId(Long employeeId){
+        return employeeRepository.existsById(employeeId);
     }
 }
