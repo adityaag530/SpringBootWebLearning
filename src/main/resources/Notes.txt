@@ -68,3 +68,10 @@ Exception Handling:
     - @RestControllerAdvice for global exception handling
     - Return appropriate http status code and erro message
     - custome error response class to provide structured error details
+
+Transforming API Response:
+    - uniform format so that frontend can handle it gracefully
+    - implement your class with @ResponseBodyAdvice<Object> to define custom return type.
+    - use @RestControllerAdvice for Global API Response transformation
+    - Return appropriate HTTP status codes and error messages
+    - you can also return timestamp of the api response
